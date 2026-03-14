@@ -1,0 +1,8 @@
+{
+  "projectDescription": "I designed a mobile platform that helps university students form study groups and schedule shared study sessions. The platform allows students to create or join groups for specific courses, propose meeting times, and track collective study goals.",
+  "projectType": "service design concept",
+  "goals": [
+    "receive critique",
+    "improve clarity of concept"
+  ]
+}
