@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import analyzeRouter from "./routes/analyze.js";
+import briefRouter from "./routes/brief.js";
+import critiqueRouter from "./routes/critique.js";
 
 const app = express();
 
@@ -15,10 +16,12 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 
 app.get("/healthcheck", (req, res) => {
-  console.log(process.env.BEDROCK_MODEL_ID);
+  console.log(process.env.GEMINI_MODEL_ID);
   res.json({ status: "ok" });
 });
 
-app.use("/analyze", analyzeRouter);
+// app.use("/analyze", analyzeRouter);
+app.use("/brief", briefRouter);
+app.use("/critique", critiqueRouter);
 
 export default app;

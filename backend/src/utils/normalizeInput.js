@@ -1,21 +1,25 @@
 export function normalizeInput(body) {
   const normalized = {
+    projectTitle: "",
     text: "",
     images: [],
     projectType: "unspecified",
-    goals: [],
   };
 
-  if (typeof body.projectDescription === "string") {
+  if (typeof body.projectTitle === "string") {
+    normalized.projectTitle = body.projectTitle.trim();
+  }
+
+  if (typeof body.description === "string") {
+    normalized.text = body.description.trim();
+  }
+
+  if (!normalized.text && typeof body.projectDescription === "string") {
     normalized.text = body.projectDescription.trim();
   }
 
   if (typeof body.projectType === "string" && body.projectType.trim()) {
     normalized.projectType = body.projectType.trim();
-  }
-
-  if (Array.isArray(body.goals)) {
-    normalized.goals = body.goals.filter((goal) => typeof goal === "string");
   }
 
   if (Array.isArray(body.images)) {

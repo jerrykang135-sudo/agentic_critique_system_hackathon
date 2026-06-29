@@ -1,6 +1,7 @@
-import { callNova } from "../bedrock/converse.js";
-import { visualCriticSystemPrompt } from "../prompts/visualCriticPrompt.js";
+import { generateModelText } from "../ai/generateModelText.js";
+import { MIA_PROMPT } from "../prompts/miaPrompt.js";
 import { buildContentBlocks } from "../utils/buildContentBlocks.js";
+import { safeJsonParse } from "../utils/safeJsonParse.js";
 
 export async function runVisualCritic(projectBrief, normalizedInput) {
   const promptText = `
@@ -18,28 +19,11 @@ Return valid JSON only.
     images: normalizedInput.images,
   });
 
-  const text = await callNova({
-    systemPrompt: visualCriticSystemPrompt,
+  const text = await generateModelText({
+    systemPrompt: MIA_PROMPT,
     contentBlocks,
     maxTokens: 700,
   });
 
   return safeJsonParse(text, { raw: text });
-}
-
-function safeJsonParse(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      return fallback;
-    }
-  }
 }

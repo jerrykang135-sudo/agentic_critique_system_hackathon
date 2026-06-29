@@ -1,6 +1,7 @@
-import { callNova } from "../bedrock/converse.js";
-import { serviceCriticSystemPrompt } from "../prompts/serviceCriticPrompt.js";
+import { generateModelText } from "../ai/generateModelText.js";
+import { JORDAN_PROMPT } from "../prompts/jordanPrompt.js";
 import { buildContentBlocks } from "../utils/buildContentBlocks.js";
+import { safeJsonParse } from "../utils/safeJsonParse.js";
 
 export async function runServiceCritic(projectBrief, normalizedInput) {
   const promptText = `
@@ -18,28 +19,11 @@ Return valid JSON only.
     images: normalizedInput.images,
   });
 
-  const text = await callNova({
-    systemPrompt: serviceCriticSystemPrompt,
+  const text = await generateModelText({
+    systemPrompt: JORDAN_PROMPT,
     contentBlocks,
     maxTokens: 700,
   });
 
   return safeJsonParse(text, { raw: text });
-}
-
-function safeJsonParse(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      return fallback;
-    }
-  }
 }

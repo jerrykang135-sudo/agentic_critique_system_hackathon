@@ -1,6 +1,7 @@
-import { callNova } from "../bedrock/converse.js";
-import { industrialCriticSystemPrompt } from "../prompts/industrialCriticPrompt.js";
+import { generateModelText } from "../ai/generateModelText.js";
+import { ALEX_PROMPT } from "../prompts/alexPrompt.js";
 import { buildContentBlocks } from "../utils/buildContentBlocks.js";
+import { safeJsonParse } from "../utils/safeJsonParse.js";
 
 export async function runIndustrialCritic(projectBrief, normalizedInput) {
   const promptText = `
@@ -18,28 +19,11 @@ Return valid JSON only.
     images: normalizedInput.images,
   });
 
-  const text = await callNova({
-    systemPrompt: industrialCriticSystemPrompt,
+  const text = await generateModelText({
+    systemPrompt: ALEX_PROMPT,
     contentBlocks,
     maxTokens: 700,
   });
 
   return safeJsonParse(text, { raw: text });
-}
-
-function safeJsonParse(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      return fallback;
-    }
-  }
 }

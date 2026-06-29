@@ -1,15 +1,17 @@
 import { normalizeInput } from "../utils/normalizeInput.js";
-import { runProjectInterpreter } from "../agents/projectInterpreter.js";
+import { interpretBrief } from "./runBrief.js";
 import { runIndustrialCritic } from "../agents/industrialCritic.js";
 import { runServiceCritic } from "../agents/serviceCritic.js";
 import { runVisualCritic } from "../agents/visualCritic.js";
 // import { runReflectionAgent } from "../agents/reflectionAgent.js";
 import { runSynthesisAgent } from "../agents/synthesisAgent.js";
 
-export async function runCritiquePipeline(rawInput) {
-  const normalizedInput = normalizeInput(rawInput);
+// export async function runCritiquePipeline(rawInput) {
+//   return runFullAnalyze(rawInput);
+// }
 
-  const projectBrief = await runProjectInterpreter(normalizedInput);
+export async function runCritiqueFromBrief(projectBrief, rawInput) {
+  const normalizedInput = normalizeInput(rawInput);
 
   const [industrial, service, visual] = await Promise.all([
     runIndustrialCritic(projectBrief, normalizedInput),
@@ -23,7 +25,6 @@ export async function runCritiquePipeline(rawInput) {
     visual,
   };
 
-  // const reflection = await runReflectionAgent(projectBrief, critiques);
   const synthesis = await runSynthesisAgent(projectBrief, critiques);
 
   return {
@@ -34,7 +35,21 @@ export async function runCritiquePipeline(rawInput) {
     },
     projectBrief,
     critiques,
-    // reflection,
     synthesis,
   };
 }
+
+// export async function runFullAnalyze(rawInput) {
+//   const briefResult = await interpretBrief(rawInput);
+//
+//   if (briefResult.status === "needs_clarification") {
+//     return briefResult;
+//   }
+//
+//   const critiqueResult = await runCritiqueFromBrief(briefResult.brief, rawInput);
+//
+//   return {
+//     status: "review_ready",
+//     ...critiqueResult,
+//   };
+// }

@@ -1,5 +1,6 @@
-import { callNova } from "../bedrock/converse.js";
-import { synthesisAgentSystemPrompt } from "../prompts/synthesisPrompt.js";
+import { generateModelText } from "../ai/generateModelText.js";
+import { SYNTHESIS_PROMPT } from "../prompts/synthesisPrompt.js";
+import { safeJsonParse } from "../utils/safeJsonParse.js";
 
 export async function runSynthesisAgent(projectBrief, critiques, reflection) {
   const promptText = `
@@ -15,8 +16,8 @@ ${JSON.stringify(reflection, null, 2)}
 Return valid JSON only.
 `;
 
-  const text = await callNova({
-    systemPrompt: synthesisAgentSystemPrompt,
+  const text = await generateModelText({
+    systemPrompt: SYNTHESIS_PROMPT,
     contentBlocks: [
       { text: promptText }
     ],
@@ -24,21 +25,4 @@ Return valid JSON only.
   });
 
   return safeJsonParse(text, { raw: text });
-}
-
-function safeJsonParse(text, fallback) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      return fallback;
-    }
-  }
 }
