@@ -2,7 +2,7 @@ import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 import { buildAiSdkContent } from "./messageContent.js";
 
-const DEFAULT_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = "gemini-3.1-flash-lite";
 
 export async function generateModelText({
   systemPrompt,
