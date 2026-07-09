@@ -45,6 +45,27 @@ export async function runCritique({ brief, originalInput }) {
   );
 }
 
+export async function askCriticFollowUp({
+  agentId,
+  brief,
+  critique,
+  originalInput,
+  messages,
+  question,
+}) {
+  return postJson(
+    `/critique/${agentId}/follow-up`,
+    {
+      brief,
+      critique,
+      originalInput,
+      messages,
+      question,
+    },
+    "The critic could not answer that question."
+  );
+}
+
 async function postJson(path, body, fallbackMessage) {
   const response = await fetch(buildApiUrl(path), {
     method: "POST",

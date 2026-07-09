@@ -99,6 +99,7 @@ export default function App() {
                 loading={session.loading}
                 onReflectionChange={reflectionState.handleReflectionChange}
                 onReset={resetSession}
+                projectInput={session.projectInput}
                 reflections={reflectionState.reflections}
                 result={session.result}
                 synthesisItems={session.synthesisItems}

@@ -1,12 +1,26 @@
 import { getCritiqueField } from "../utils/responseFormatters";
+import { useCriticConversation } from "../hooks/useCriticConversation";
 
 export function CriticCard({
   agent,
+  brief,
   critique,
   onReflectionChange,
+  projectInput,
   reflection,
 }) {
   const hasCritique = Object.keys(critique).length > 0;
+  const conversation = useCriticConversation({
+    agentId: agent.id,
+    brief,
+    critique,
+    projectInput,
+  });
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    conversation.sendMessage();
+  }
 
   return (
     <article className={`sleek-card critic-card ${agent.accent}`}>
@@ -60,16 +74,40 @@ export function CriticCard({
         </div>
       </div>
 
-      <div className="followup-disabled">
+      <div className="exchange-buffer">
         <label className="label" htmlFor={`followup-${agent.id}`}>
           Exchange Buffer
         </label>
-        <input
-          id={`followup-${agent.id}`}
-          className="input"
-          disabled
-          placeholder="Follow-up critique needs a backend endpoint before this can be active."
-        />
+        {conversation.messages.length > 0 && (
+          <div className="chat-log" aria-live="polite">
+            {console.log(conversation.messages)}
+            {conversation.messages.map((message) => (
+              <div className={`chat-message ${message.role}`} key={message.id}>
+                {message.content}
+              </div>
+            ))}
+            {conversation.isSending && <div className="chat-message assistant pending">Thinking...</div>}
+          </div>
+        )}
+        <form className="chat-composer" onSubmit={handleSubmit}>
+          <textarea
+            id={`followup-${agent.id}`}
+            className="textarea"
+            value={conversation.draft}
+            onChange={(event) => conversation.setDraft(event.target.value)}
+            placeholder={`Ask ${agent.role} about this critique...`}
+            disabled={!hasCritique || conversation.isSending}
+            maxLength={2000}
+          />
+          <button
+            className="mini-btn"
+            type="submit"
+            disabled={!hasCritique || !conversation.draft.trim() || conversation.isSending}
+          >
+            {conversation.isSending ? "Thinking" : "Send"}
+          </button>
+        </form>
+        {conversation.errorMessage && <div className="chat-error">{conversation.errorMessage}</div>}
       </div>
     </article>
   );

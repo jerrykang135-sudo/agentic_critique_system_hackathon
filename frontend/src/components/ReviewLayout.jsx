@@ -11,6 +11,7 @@ export function ReviewLayout({
   loading,
   onReflectionChange,
   onReset,
+  projectInput,
   reflections,
   result,
   synthesisItems,
@@ -60,9 +61,11 @@ export function ReviewLayout({
           {visibleAgents.map((agent) => (
             <CriticCard
               agent={agent}
+              brief={brief}
               critique={getCritique(result, agent.id)}
               key={agent.id}
               onReflectionChange={onReflectionChange}
+              projectInput={projectInput}
               reflection={reflections[agent.id]}
             />
           ))}

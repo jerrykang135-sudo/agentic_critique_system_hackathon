@@ -154,6 +154,7 @@ export function useCritiqueSession({ createProjectInput, briefFallback, navigate
     clarifyingQuestion: state.clarifyingQuestion,
     errorMessage: state.errorMessage,
     loading,
+    projectInput: state.projectInput,
     resetSession,
     result: state.result,
     setClarificationAnswer: (answer) =>
