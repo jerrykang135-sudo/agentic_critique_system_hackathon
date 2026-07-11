@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/brief/:path*",
-      "destination": "https://agenticcritiquesystemhackathon.railway.internal/brief/:path*"
+      "destination": "https://agenticcritiquesystemhackathon-production.up.railway.app/brief/:path*"
     },
     {
       "source": "/critique/:path*",
-      "destination": "https://agenticcritiquesystemhackathon.railway.internal/critique/:path*"
+      "destination": "https://agenticcritiquesystemhackathon-production.up.railway.app/critique/:path*"
     }
   ]
 }
