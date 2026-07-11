@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/brief/:path*",
+      "destination": "https://agenticcritiquesystemhackathon.railway.internal/brief/:path*"
+    },
+    {
+      "source": "/critique/:path*",
+      "destination": "https://agenticcritiquesystemhackathon.railway.internal/critique/:path*"
+    }
+  ]
+}
